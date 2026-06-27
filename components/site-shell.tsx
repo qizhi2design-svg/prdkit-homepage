@@ -1,0 +1,88 @@
+import Link from 'next/link'
+import { ThemeToggle } from '@/components/theme-toggle'
+
+function GithubIcon({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 1049 1024" fill="none">
+      <path
+        d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z"
+        fill="var(--color-bg-inverse)"
+      />
+    </svg>
+  )
+}
+
+const navigation = [
+  { href: '/', label: '首页' },
+  { href: '/docs', label: '文档' }
+] as const
+
+export function SiteShell({
+  children,
+  currentPath
+}: Readonly<{
+  children: React.ReactNode
+  currentPath?: string
+}>) {
+  return (
+    <>
+      <header className="site-header">
+        <div className="site-header__inner">
+          <Link href="/" className="site-brand" aria-label="PRDKit 首页">
+            <img src="/logo.svg" alt="PRDKit" className="site-brand__logo" />
+            <span className="site-brand__wordmark">
+              <span className="site-brand__prd">PRD</span>
+              <span className="site-brand__kit">Kit</span>
+            </span>
+          </Link>
+
+          <div className="site-header__right">
+            <nav className="site-nav" aria-label="主导航">
+              {navigation.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={
+                    currentPath === item.href ? 'site-nav__link is-active' : 'site-nav__link'
+                  }
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="site-header__actions">
+              <ThemeToggle />
+              <a
+                href="https://github.com/qizhi2design-svg/prdkit"
+                target="_blank"
+                rel="noreferrer"
+                className="site-header__icon-link"
+                aria-label="GitHub"
+              >
+                <GithubIcon size={20} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="site-frame">
+        {children}
+
+        <footer className="site-footer">
+          <div className="site-footer__copy">
+            <strong>PRDKit</strong>
+            <p>产品经理的 AI 工作台，面向 PRD、原型、标注、版本和发布。</p>
+          </div>
+          <div className="site-footer__meta">
+            <Link href="/docs">精选文档</Link>
+            <a href="https://github.com/qizhi2design-svg/prdkit" target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+          </div>
+        </footer>
+      </div>
+    </>
+  )
+}
