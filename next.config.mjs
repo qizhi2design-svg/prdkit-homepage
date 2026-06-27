@@ -9,6 +9,7 @@ const withNextra = nextra({
 })
 
 export default withNextra({
+  output: 'standalone',
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx']
 })

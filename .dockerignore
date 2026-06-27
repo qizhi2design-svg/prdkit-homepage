@@ -1,0 +1,11 @@
+.git
+.github
+.codegraph
+.next
+node_modules
+deploy
+Dockerfile
+.dockerignore
+*.tsbuildinfo
+.DS_Store
+README.md
