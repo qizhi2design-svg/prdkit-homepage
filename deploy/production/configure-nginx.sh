@@ -56,6 +56,36 @@ awk -v upstream="$UPSTREAM" '
   { print }
 ' "$config_file" > "$tmp_file"
 
+if ! grep -Fq "proxy_pass ${UPSTREAM};" "$tmp_file"; then
+  injected_file="$(mktemp)"
+  awk -v upstream="$UPSTREAM" '
+    function print_proxy_block() {
+      print "    location / {"
+      print "        proxy_pass " upstream ";"
+      print "        proxy_http_version 1.1;"
+      print "        proxy_set_header Host $host;"
+      print "        proxy_set_header X-Real-IP $remote_addr;"
+      print "        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+      print "        proxy_set_header X-Forwarded-Proto $scheme;"
+      print "        proxy_set_header Upgrade $http_upgrade;"
+      print "        proxy_set_header Connection \"upgrade\";"
+      print "    }"
+    }
+
+    { lines[NR] = $0 }
+    /^[[:space:]]*}[[:space:]]*$/ { last_closing = NR }
+    END {
+      for (i = 1; i <= NR; i++) {
+        if (i == last_closing) {
+          print_proxy_block()
+        }
+        print lines[i]
+      }
+    }
+  ' "$tmp_file" > "$injected_file"
+  mv "$injected_file" "$tmp_file"
+fi
+
 mv "$tmp_file" "$config_file"
 
 if ! nginx -t; then
