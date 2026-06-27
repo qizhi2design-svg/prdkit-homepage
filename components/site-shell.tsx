@@ -71,15 +71,74 @@ export function SiteShell({
         {children}
 
         <footer className="site-footer">
-          <div className="site-footer__copy">
-            <strong>PRDKit</strong>
-            <p>产品经理的 AI 工作台，面向 PRD、原型、标注、版本和发布。</p>
-          </div>
-          <div className="site-footer__meta">
-            <Link href="/docs">精选文档</Link>
-            <a href="https://github.com/qizhi2design-svg/prdkit" target="_blank" rel="noreferrer">
-              GitHub
-            </a>
+          <div className="site-footer__inner">
+            <div className="site-footer__columns">
+              <div className="site-footer__col is-brand">
+                <div className="site-footer__brand">
+                  <strong>PRDKit</strong>
+                  <p>产品经理的 AI 工作台，从 PRD 到原型再到发布，一切收敛到一个桌面应用。</p>
+                </div>
+                <div className="site-footer__social">
+                  <a
+                    href="https://github.com/qizhi2design-svg/prdkit"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="site-footer__social-link"
+                    aria-label="GitHub"
+                  >
+                    <GithubIcon size={18} />
+                    <span>GitHub</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="site-footer__col">
+                <span className="site-footer__col-label">资源</span>
+                <nav className="site-footer__nav" aria-label="资源导航">
+                  <Link href="/docs">精选文档</Link>
+                  <Link href="/docs/quick-start">快速开始</Link>
+                  <Link href="/docs/workflow">工作流概览</Link>
+                  <Link href="/docs/sharing">发布与分享</Link>
+                </nav>
+              </div>
+
+              <div className="site-footer__col">
+                <span className="site-footer__col-label">关于</span>
+                <nav className="site-footer__nav" aria-label="关于导航">
+                  <a
+                    href="https://github.com/qizhi2design-svg/prdkit"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    GitHub 仓库
+                  </a>
+                  <a
+                    href="https://github.com/qizhi2design-svg/prdkit/releases"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    更新日志
+                  </a>
+                  <a
+                    href="https://github.com/qizhi2design-svg/prdkit/issues"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    反馈与建议
+                  </a>
+                </nav>
+              </div>
+            </div>
+
+            <div className="site-footer__bottom">
+              <p className="site-footer__copyright">
+                &copy; {new Date().getFullYear()} PRDKit. All rights reserved.
+              </p>
+              <div className="site-footer__legal">
+                <a href="/docs/privacy">隐私政策</a>
+                <a href="/docs/terms">服务条款</a>
+              </div>
+            </div>
           </div>
         </footer>
       </div>

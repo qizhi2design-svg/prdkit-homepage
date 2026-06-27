@@ -28,6 +28,16 @@ export default function DocsLayout({ children }: Readonly<{ children: React.Reac
         </aside>
 
         <article className="docs-article">
+          <div className="docs-mobile-nav">
+            <span className="docs-mobile-nav__eyebrow">精选文档</span>
+            <nav className="docs-mobile-nav__list" aria-label="移动端文档目录">
+              {docsLinks.map((item) => (
+                <Link key={item.href} href={item.href} className="docs-mobile-nav__link">
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
           <div className="docs-article__inner">{children}</div>
         </article>
       </main>
