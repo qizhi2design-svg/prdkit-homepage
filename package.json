@@ -23,7 +23,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx,mts}": [
-      "prettier --write"
+      "prettier --write",
+      "tsc --noEmit"
     ],
     "*.{ts,tsx,mts,js,jsx,mjs,cjs,mts,cts,json,less,css,md}": [
       "prettier --write"
