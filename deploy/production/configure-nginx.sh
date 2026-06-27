@@ -22,7 +22,7 @@ cp "$config_file" "$backup_file"
 
 tmp_file="$(mktemp)"
 awk -v upstream="$UPSTREAM" '
-  function print_proxy_block() {
+  function print_proxy_blocks() {
     print "    location ^~ /_next/ {"
     print "        proxy_pass " upstream ";"
     print "        proxy_http_version 1.1;"
@@ -44,8 +44,12 @@ awk -v upstream="$UPSTREAM" '
     print "    }"
   }
 
+  in_location == 0 && $0 ~ /^[[:space:]]*location[[:space:]]+\^~[[:space:]]+\/_next\/[[:space:]]*\{/ {
+    in_location = 1
+    depth = 0
+  }
+
   in_location == 0 && $0 ~ /^[[:space:]]*location[[:space:]]+\/[[:space:]]*\{/ {
-    print_proxy_block()
     in_location = 1
     depth = 0
   }
@@ -62,47 +66,18 @@ awk -v upstream="$UPSTREAM" '
     next
   }
 
-  { print }
-' "$config_file" > "$tmp_file"
+  { lines[++line_count] = $0 }
+  /^[[:space:]]*}[[:space:]]*$/ { last_closing = line_count }
 
-if ! grep -Fq "location ^~ /_next/" "$tmp_file"; then
-  injected_file="$(mktemp)"
-  awk -v upstream="$UPSTREAM" '
-    function print_proxy_block() {
-      print "    location ^~ /_next/ {"
-      print "        proxy_pass " upstream ";"
-      print "        proxy_http_version 1.1;"
-      print "        proxy_set_header Host $host;"
-      print "        proxy_set_header X-Real-IP $remote_addr;"
-      print "        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-      print "        proxy_set_header X-Forwarded-Proto $scheme;"
-      print "    }"
-      print ""
-      print "    location / {"
-      print "        proxy_pass " upstream ";"
-      print "        proxy_http_version 1.1;"
-      print "        proxy_set_header Host $host;"
-      print "        proxy_set_header X-Real-IP $remote_addr;"
-      print "        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-      print "        proxy_set_header X-Forwarded-Proto $scheme;"
-      print "        proxy_set_header Upgrade $http_upgrade;"
-      print "        proxy_set_header Connection \"upgrade\";"
-      print "    }"
-    }
-
-    { lines[NR] = $0 }
-    /^[[:space:]]*}[[:space:]]*$/ { last_closing = NR }
-    END {
-      for (i = 1; i <= NR; i++) {
-        if (i == last_closing) {
-          print_proxy_block()
-        }
-        print lines[i]
+  END {
+    for (i = 1; i <= line_count; i++) {
+      if (i == last_closing) {
+        print_proxy_blocks()
       }
+      print lines[i]
     }
-  ' "$tmp_file" > "$injected_file"
-  mv "$injected_file" "$tmp_file"
-fi
+  }
+' "$config_file" > "$tmp_file"
 
 mv "$tmp_file" "$config_file"
 
