@@ -3,11 +3,12 @@ import { SiteShell } from '@/components/site-shell'
 
 const docsLinks = [
   { href: '/docs', label: '文档总览' },
-  { href: '/docs/quick-start', label: '安装与快速开始' },
-  { href: '/docs/workflow', label: '工作流概览' },
-  { href: '/docs/desktop', label: 'CLI 与 Desktop' },
+  { href: '/docs/quick-start', label: '快速开始' },
+  { href: '/docs/workbench', label: '工作台漫游' },
+  { href: '/docs/prd-lifecycle', label: '撰写 PRD' },
+  { href: '/docs/prototype', label: '原型与标注' },
   { href: '/docs/sharing', label: '发布与分享' },
-  { href: '/docs/product-guide', label: '产品使用指南' }
+  { href: '/docs/cli-ref', label: 'CLI 参考' }
 ] as const
 
 export default function DocsLayout({ children }: Readonly<{ children: React.ReactNode }>) {

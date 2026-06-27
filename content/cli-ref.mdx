@@ -1,0 +1,149 @@
+# CLI 参考
+
+当你需要自动化、批量操作或脚手架搭建时，CLI 是 Desktop 的互补入口。
+
+---
+
+## 命令概览
+
+```
+prdkit <command> [subcommand] [options]
+
+命令：
+  init       初始化项目脚手架
+  clone      克隆模板仓库
+  prd        PRD 相关命令
+    create     创建 PRD
+    list       列出 PRD
+    check      检查 PRD
+    checkpoint 管理 PRD 版本
+    publish    发布 PRD
+  prototype  原型相关命令
+    create     创建原型
+    list       列出原型
+    publish    发布原型
+    checkpoint 管理原型版本
+    mark       管理标注
+    release    管理发布
+  info       查看项目信息
+  doctor     诊断和修复问题
+  serve      启动本地预览服务器
+  update     检查更新
+  auth       登录/登出
+  cloud      云端项目管理
+```
+
+---
+
+## 常用命令
+
+### `prdkit init`
+
+初始化一个新项目：
+
+```bash
+prdkit init --name my-project
+```
+
+从模板仓库拉取脚手架，生成项目目录结构和配置文件。
+
+### `prdkit prd create`
+
+在当前项目下创建一份 PRD：
+
+```bash
+prdkit prd create --title "功能需求文档"
+```
+
+使用模板生成 PRD 文件，支持变量替换（标题、项目名、作者、日期）。
+
+### `prdkit prd check`
+
+检查 PRD 文件的结构完整性：
+
+```bash
+prdkit prd check
+```
+
+验证 markdown 格式、必要章节是否存在、引用是否完整。
+
+### `prdkit prototype create`
+
+创建一个原型页面：
+
+```bash
+prdkit prototype create --name "首页看板"
+```
+
+生成原型 HTML 模板，添加到项目结构中。
+
+### `prdkit prototype mark`
+
+管理原型上的标注：
+
+```bash
+prdkit prototype mark create             # 创建标注
+prdkit prototype mark list               # 列出标注
+prdkit prototype mark update <mark-id>   # 更新标注
+```
+
+### `prdkit prototype checkpoint`
+
+管理原型版本：
+
+```bash
+prdkit prototype checkpoint create        # 创建 checkpoint
+prdkit prototype checkpoint list          # 列出所有 checkpoint
+prdkit prototype checkpoint diff <id>     # 对比差异
+prdkit prototype checkpoint restore <id>  # 恢复到某版本
+```
+
+### `prdkit serve`
+
+启动本地预览服务器：
+
+```bash
+prdkit serve
+```
+
+在浏览器中实时预览原型和 PRD，支持 WebSocket 热重载。
+
+---
+
+## 配置
+
+PRDKit 的项目配置文件位于 `.prdkit/config.json`：
+
+```json
+{
+  "version": 1,
+  "projectName": "my-project",
+  "author": "your-name",
+  "scaffoldRepo": "git@github.com:qizhi2design-svg/scaffold.git",
+  "templateRepo": "git@github.com:qizhi2design-svg/prdkit-templates.git",
+  "defaultCreateDirs": {
+    "prd": "workspace/prds",
+    "prototype": "workspace/prototypes"
+  }
+}
+```
+
+---
+
+## 与 Desktop 的关系
+
+| 场景 | 推荐入口 |
+|---|---|
+| 可视化编辑和预览 | Desktop |
+| 创建标注和评审 | Desktop |
+| 项目初始化和脚手架 | CLI |
+| 批量创建/检查/发布 | CLI |
+| CI/CD 集成 | CLI |
+| 本地快速预览 | CLI `serve` |
+| 云端项目管理 | CLI `cloud` |
+
+---
+
+## 更多信息
+
+运行 `prdkit --help` 或 `prdkit <command> --help` 查看完整的选项和用法说明。
