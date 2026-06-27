@@ -71,6 +71,9 @@ jobs:
             deploy/production/docker-compose.yml \
             "${SERVER_USER}@${SERVER_HOST}:${SERVER_DIR}/docker-compose.yml"
           scp -i ~/.ssh/prdkit-homepage -P "${SERVER_PORT}" \
+            deploy/production/configure-nginx.sh \
+            "${SERVER_USER}@${SERVER_HOST}:${SERVER_DIR}/configure-nginx.sh"
+          scp -i ~/.ssh/prdkit-homepage -P "${SERVER_PORT}" \
             "${deploy_env}" \
             "${SERVER_USER}@${SERVER_HOST}:${SERVER_DIR}/.env"
 
@@ -95,8 +98,10 @@ jobs:
           docker compose up -d --remove-orphans
           docker compose ps
 
+          DOMAIN=www.prdkit.xyz UPSTREAM=http://127.0.0.1:3030 sh ./configure-nginx.sh
+
           for attempt in $(seq 1 60); do
-            if curl -fsS http://127.0.0.1:3030/ >/dev/null; then
+            if curl -fsS http://127.0.0.1:3030/ >/dev/null && curl -fsS https://www.prdkit.xyz/ >/dev/null; then
               exit 0
             fi
             echo "Waiting for prdkit-homepage to become ready (${attempt}/60)..."

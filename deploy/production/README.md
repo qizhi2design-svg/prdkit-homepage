@@ -41,7 +41,7 @@ If running the bootstrap script locally, copy it to the server first.
 
 ## 宝塔 Nginx
 
-Keep 宝塔 in charge of the domain and HTTPS certificate. Only change the site reverse proxy target:
+The deploy workflow copies and runs `configure-nginx.sh` on the server. It keeps 宝塔 in charge of the domain and HTTPS certificate, backs up the detected vhost file, and changes only the site reverse proxy target:
 
 ```nginx
 location / {
@@ -58,6 +58,13 @@ Validate before reload:
 
 ```sh
 nginx -t
+```
+
+Manual configuration command:
+
+```sh
+cd /opt/prdkit-homepage
+DOMAIN=www.prdkit.xyz UPSTREAM=http://127.0.0.1:3030 sh ./configure-nginx.sh
 ```
 
 ## Manual Server Deploy
