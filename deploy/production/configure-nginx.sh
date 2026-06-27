@@ -23,6 +23,15 @@ cp "$config_file" "$backup_file"
 tmp_file="$(mktemp)"
 awk -v upstream="$UPSTREAM" '
   function print_proxy_block() {
+    print "    location ^~ /_next/ {"
+    print "        proxy_pass " upstream ";"
+    print "        proxy_http_version 1.1;"
+    print "        proxy_set_header Host $host;"
+    print "        proxy_set_header X-Real-IP $remote_addr;"
+    print "        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+    print "        proxy_set_header X-Forwarded-Proto $scheme;"
+    print "    }"
+    print ""
     print "    location / {"
     print "        proxy_pass " upstream ";"
     print "        proxy_http_version 1.1;"
@@ -56,10 +65,19 @@ awk -v upstream="$UPSTREAM" '
   { print }
 ' "$config_file" > "$tmp_file"
 
-if ! grep -Fq "proxy_pass ${UPSTREAM};" "$tmp_file"; then
+if ! grep -Fq "location ^~ /_next/" "$tmp_file"; then
   injected_file="$(mktemp)"
   awk -v upstream="$UPSTREAM" '
     function print_proxy_block() {
+      print "    location ^~ /_next/ {"
+      print "        proxy_pass " upstream ";"
+      print "        proxy_http_version 1.1;"
+      print "        proxy_set_header Host $host;"
+      print "        proxy_set_header X-Real-IP $remote_addr;"
+      print "        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+      print "        proxy_set_header X-Forwarded-Proto $scheme;"
+      print "    }"
+      print ""
       print "    location / {"
       print "        proxy_pass " upstream ";"
       print "        proxy_http_version 1.1;"

@@ -101,7 +101,8 @@ jobs:
           DOMAIN=www.prdkit.xyz UPSTREAM=http://127.0.0.1:3030 sh ./configure-nginx.sh
 
           for attempt in $(seq 1 60); do
-            if curl -fsS http://127.0.0.1:3030/ | grep -q "PRDKit" && curl -fsS https://www.prdkit.xyz/ | grep -q "PRDKit"; then
+            css_path="$(curl -fsS https://www.prdkit.xyz/ | grep -o '/_next/static/css/[^" ]*\.css' | head -n 1 || true)"
+            if curl -fsS http://127.0.0.1:3030/ | grep -q "PRDKit" && curl -fsS https://www.prdkit.xyz/ | grep -q "PRDKit" && [ -n "${css_path}" ] && curl -fsSI "https://www.prdkit.xyz${css_path}" | grep -q "200"; then
               exit 0
             fi
             echo "Waiting for prdkit-homepage to become ready (${attempt}/60)..."
