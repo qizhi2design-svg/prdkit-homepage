@@ -9,6 +9,8 @@ services:
       NODE_ENV: production
       NEXT_TELEMETRY_DISABLED: '1'
       NEXT_PUBLIC_RELEASE_BASE_URL: ${NEXT_PUBLIC_RELEASE_BASE_URL:-https://www.prdkit.xyz}
+      NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
+      NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION:-}
     healthcheck:
       test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/ >/dev/null 2>&1']
       interval: 30s

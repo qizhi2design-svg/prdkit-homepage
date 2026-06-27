@@ -17,6 +17,8 @@ env:
   SERVER_PORT: ${{ vars.SERVER_PORT || '22' }}
   SERVER_DIR: /opt/prdkit-homepage
   NEXT_PUBLIC_RELEASE_BASE_URL: https://www.prdkit.xyz
+  NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID || '' }}
+  NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '' }}
 
 jobs:
   build-and-deploy:
@@ -44,6 +46,10 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            NEXT_PUBLIC_RELEASE_BASE_URL=${{ env.NEXT_PUBLIC_RELEASE_BASE_URL }}
+            NEXT_PUBLIC_GA_ID=${{ env.NEXT_PUBLIC_GA_ID }}
+            NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${{ env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}
 
       - name: Prepare SSH
         shell: bash
@@ -63,6 +69,8 @@ jobs:
             printf 'IMAGE_NAME=%s\n' "${IMAGE_NAME}"
             printf 'IMAGE_TAG=%s\n' "${GITHUB_SHA}"
             printf 'NEXT_PUBLIC_RELEASE_BASE_URL=%s\n' "${NEXT_PUBLIC_RELEASE_BASE_URL}"
+            printf 'NEXT_PUBLIC_GA_ID=%s\n' "${NEXT_PUBLIC_GA_ID}"
+            printf 'NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=%s\n' "${NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}"
           } > "${deploy_env}"
 
           ssh -i ~/.ssh/prdkit-homepage -p "${SERVER_PORT}" "${SERVER_USER}@${SERVER_HOST}" \

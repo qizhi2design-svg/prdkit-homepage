@@ -17,6 +17,8 @@ Optional repository variables:
 - `SERVER_HOST`: defaults to `43.153.205.242`.
 - `SERVER_USER`: defaults to `root`.
 - `SERVER_PORT`: defaults to `22`.
+- `NEXT_PUBLIC_GA_ID`: GA4 Measurement ID, for example `G-XXXXXXXXXX`.
+- `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`: Google Search Console HTML tag content value.
 
 The workflow publishes:
 
@@ -75,6 +77,8 @@ cat > .env <<'EOF'
 IMAGE_NAME=ghcr.io/qizhi2design-svg/prdkit-homepage
 IMAGE_TAG=latest
 NEXT_PUBLIC_RELEASE_BASE_URL=https://www.prdkit.xyz
+NEXT_PUBLIC_GA_ID=
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
 EOF
 
 docker compose pull

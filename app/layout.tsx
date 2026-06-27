@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
+import { GoogleAnalytics } from '@/components/google-analytics'
 import './globals.css'
 
 const geist = Geist({
@@ -33,7 +34,12 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'PRDKit',
     description: '产品经理的 AI 工作台，从 PRD 到原型再到发布。'
-  }
+  },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? {
+        google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      }
+    : undefined
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -48,6 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           {children}
         </ThemeProvider>
+        <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_ID} />
       </body>
     </html>
   )
